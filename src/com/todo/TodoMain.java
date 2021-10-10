@@ -52,7 +52,16 @@ public class TodoMain {
 				String cate = sc.nextLine().trim();
 				TodoUtil.findCateList(l,cate);
 				break;
+			
+			case "comp":
+				int comp = sc.nextInt();
+				TodoUtil.completeItem(l,comp);
+				break;
 
+			case "ls_comp":
+				TodoUtil.listAll(l, "is_completed", 1);
+				break;
+				
 			case "ls_name":
 				System.out.println("제목순으로 정렬하였습니다.");
 				TodoUtil.listAll(l,"title",1);

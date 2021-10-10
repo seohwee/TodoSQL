@@ -19,8 +19,8 @@ public class TodoList {
 		this.conn = DbConnect.getConnection();
 	}
 	
-	public Boolean isDuplicate(TodoList title) {
-		for (TodoItem item : title.getList()) {
+	public Boolean isDuplicate(String title) {
+		for (TodoItem item : getList()) {
 			if (title.equals(item.getTitle())) return true;
 		}
 		return false;
@@ -110,7 +110,8 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(id, title, description, category, due_date);
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -139,12 +140,44 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(id, title, description, category, due_date);
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
 			}
 			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public ArrayList<TodoItem> getList(int completed) {
+		ArrayList<TodoItem> list = new ArrayList<TodoItem>();
+		Statement stmt;
+
+		try {
+			String sql = "SELECT * FROM list WHERE is_completed = 1";
+			stmt = conn.prepareStatement(sql);
+			//pstmt.setString(1,keyword);
+			//pstmt.setString(2,keyword);
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				String category = rs.getString("category");
+				String title = rs.getString("title");
+				String description = rs.getString("memo");
+				String due_date = rs.getString("due_date");
+				String current_date = rs.getString("current_date");
+				int is_completed = rs.getInt("is_completed");
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
+				t.setId(id);
+				t.setCurrent_date(current_date);
+				t.setIs_completed(is_completed);
+				list.add(t);
+			}
+			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -184,7 +217,9 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(id, title, description, category, due_date);
+				int is_completed = rs.getInt("is_completed");
+
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -251,7 +286,9 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(id, title, description, category, due_date);
+				int is_completed = rs.getInt("is_completed");
+
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -277,7 +314,9 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(id, title, description, category, due_date);
+				int is_completed = rs.getInt("is_completed");
+
+				TodoItem t = new TodoItem(id, title, is_completed, description, category, due_date);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -288,5 +327,21 @@ public class TodoList {
 		}
 		return list;
 
+	}
+
+	public int completeItem(int num) {
+		int count=0;
+		try {
+			String sql = "UPDATE list SET is_completed = 1 WHERE id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			count = pstmt.executeUpdate();
+			
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }

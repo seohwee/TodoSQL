@@ -16,16 +16,17 @@ public class TodoUtil {
 	
 	public static void createItem(TodoList l) {
 		int id = 1;
+		int is_completed = 0;
 		String title, desc, category, due_date;
 		//int num = list.getList().size()+1;
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.print("[항목 추가]\n" + "제목 > ");
 		title = sc.next();
-		//if (l.isDuplicate(title)) {
-		//	System.out.println("제목이 중복됩니다!");
-		//	return;
-		//}
+		if (l.isDuplicate(title)) {
+			System.out.println("제목이 중복됩니다!");
+			return;
+		}
 	
 		
 		System.out.print("카테고리 > ");
@@ -43,7 +44,7 @@ public class TodoUtil {
 		due_date = sc.nextLine().trim();
 		
 		//TodoItem t = new TodoItem(num, category, title, due_date, desc);
-		TodoItem t = new TodoItem(id, title, desc, category, due_date);
+		TodoItem t = new TodoItem(id, title, is_completed, desc, category, due_date);
 		if(l.addItem(t)>0) { 
 			System.out.println("추가되었습니다.");
 		}	
@@ -61,6 +62,7 @@ public class TodoUtil {
 
 	public static void updateItem(TodoList l) {
 		int id=1;
+		int new_is_completed=0;
 		String new_title, new_desc, new_category, new_due_date;
 		Scanner sc = new Scanner(System.in);
 		
@@ -77,7 +79,7 @@ public class TodoUtil {
 		System.out.print("새 마감일자 > ");
 		new_due_date = sc.nextLine().trim();
 		
-		TodoItem t = new TodoItem(id, new_title, new_desc, new_category, new_due_date);
+		TodoItem t = new TodoItem(id, new_title, new_is_completed, new_desc, new_category, new_due_date);
 		t.setId(index);
 		if(l.updateItem(t) > 0) {
 			System.out.println("수정되었습니다.");
@@ -225,6 +227,21 @@ public class TodoUtil {
 		System.out.printf("[전체 목록, 총 %d개]\n", l.getCount());
 		for(TodoItem item : l.getOrderedList(orderby, ordering)) {
 			System.out.println(item.toString());
+		}
+	}
+	
+	public static void listAll(TodoList l, int comp) {
+		int count=0;
+		for(TodoItem item : l.getList(comp)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		System.out.printf("[전체 목록, 총 %d개]\n", count);
+	}
+
+	public static void completeItem(TodoList l, int comp) {
+		if(l.completeItem(comp)>0) {
+			System.out.println("완료 체크하였습니다.");
 		}
 	}
 

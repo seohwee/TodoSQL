@@ -10,9 +10,10 @@ public class TodoItem {
     private String desc;
     private String current_date;
     private String due_date;
+    private int is_completed;
 
 
-    public TodoItem(int id, String title, String desc, String category, String due_date){
+    public TodoItem(int id, String title, int is_completed, String desc, String category, String due_date){
         this.id=id;
     	this.category=category;
     	this.title=title;
@@ -20,6 +21,7 @@ public class TodoItem {
         this.desc=desc;
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
         this.current_date=f.format(new Date());
+        this.is_completed=is_completed;
     }
 	public int getId() {
 		// TODO Auto-generated method stub
@@ -72,11 +74,25 @@ public class TodoItem {
     
     @Override
     public String toString() {
-    	return "[" + category + "] " + title + " - " + desc + " - " + due_date + " - " + current_date;
+    	if(is_completed == 1) {
+    		return "[" + category + "] " + title+"[V]" + " - " + desc + " - " + due_date + " - " + current_date;
+    
+    	}
+    	else if(is_completed == 0) {
+    		return "[" + category + "] " + title + " - " + desc + " - " + due_date + " - " + current_date;
+    	}
+		return "[" + category + "] " + title + " - " + desc + " - " + due_date + " - " + current_date;
     }
     
     public String toSaveString() {
     	return category + "##" + title + "##" + desc + "##" + due_date + "##" + current_date + "\n";
+    }
+    
+    public void setIs_completed(int is_completed) {
+    	this.is_completed = is_completed;
+    }
+    public int getIs_completed() {
+    	return is_completed;
     }
 
 
